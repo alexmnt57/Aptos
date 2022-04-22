@@ -1,0 +1,22 @@
+Update Aptos on 01.04.2022
+
+sudo su
+cd ~/aptos
+docker compose down
+rm -r /var/lib/docker/volumes/aptos_db/_data/db
+rm genesis.blob
+rm waypoint.txt
+docker compose pull
+wget https://devnet.aptoslabs.com/genesis.blob
+wget https://devnet.aptoslabs.com/waypoint.txt
+nano public_full_node.yaml
+
+Change your peer_id to your public key, which was obtained when starting the node. The peer_id is now 32 bytes (64 characters) instead of 16 bytes (32 characters). Previously, peer_id was equal to the second half of the public key.
+
+ctrl+x
+y
+enter
+docker compose up -d
+
+Check the sync:
+curl 127.0.0.1:9101/metrics 2> /dev/null | grep aptos_state_sync_version | grep type
